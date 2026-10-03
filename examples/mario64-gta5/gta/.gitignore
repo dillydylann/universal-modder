@@ -1,0 +1,7 @@
+build/
+# fetched by fetch_deps.sh: ScriptHookV (may not be redistributed), libsm64 and the sm64.dll built from it
+third_party/
+# never commit a ROM
+*.z64
+*.n64
+*.v64
