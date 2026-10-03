@@ -209,6 +209,7 @@ struct World
 	std::unordered_map<int, uint32_t> vehicles; // GTA vehicle -> libsm64 surface object
 	V3 lastSafe;           // the last place Mario stood on the ground
 	float deadFor = 0;     // seconds since Mario died
+	float noFloorFor = 0;  // seconds with no collision under Mario (fell through a gap in it)
 	ProxySaved saved;
 };
 World g_w;
@@ -346,6 +347,7 @@ bool spawnMario(const V3 &feet, float headingRad)
 	g_w.prev.buffers.numTrianglesUsed = 0;
 	g_w.lastSafe = feet;
 	g_w.deadFor = 0;
+	g_w.noFloorFor = 0;
 	return true;
 }
 
@@ -393,7 +395,8 @@ void disable()
 {
 	if (!g_w.active)
 		return;
-	const V3 at = marioGta(g_w.state);
+	// back where Mario is, unless he's fallen out of the collision; then where he last stood
+	const V3 at = g_w.noFloorFor > 0 ? g_w.lastSafe : marioGta(g_w.state);
 	const float heading = marioHeading(g_w.state) * 180.0f / kPi;
 	dropVehicles();
 	if (g_w.mario >= 0)
@@ -426,7 +429,8 @@ void keepCollision()
 		return;
 	// a finished window: move the origin next to it if Mario has wandered far, then swap the surfaces in
 	const V3 o = feet - g_w.frame.origin;
-	if (length2d(o) > 60.0f || std::fabs(o.z) > 30.0f)
+	// not while he's in the air: libsm64 keeps his peak height for fall damage, and moving him would skew it
+	if ((length2d(o) > 60.0f || std::fabs(o.z) > 30.0f) && !isAirAction(g_w.state.action))
 	{
 		moveOrigin(b.center());
 		loadStaticSurfaces();
@@ -745,10 +749,13 @@ SM64MarioInputs readInputs()
 
 void respawnIfDead(float dt)
 {
-	// fell through a gap in the probed collision: treat it like a death
-	if (marioGta(g_w.state).z < g_w.lastSafe.z - 60.0f)
-		g_w.state.health = 0;
-	if (g_w.state.health >= 0x100)
+	// no collision under him for a while: he fell through a gap in it, which counts as a death
+	const V3 s{g_w.state.position[0], g_w.state.position[1], g_w.state.position[2]};
+	if (g_lib.sm64_surface_find_floor_height(s.x, s.y + 10.0f, s.z) <= -100000.0f)
+		g_w.noFloorFor += dt;
+	else
+		g_w.noFloorFor = 0;
+	if (g_w.state.health >= 0x100 && g_w.noFloorFor < 2.5f)
 	{
 		g_w.deadFor = 0;
 		return;
@@ -759,9 +766,18 @@ void respawnIfDead(float dt)
 	g_lib.sm64_mario_delete(g_w.mario);
 	g_w.mario = -1;
 	const float heading = marioHeading(g_w.state);
+	// the collision window has followed him away (a fall, say): rebuild it round the respawn point first, or
+	// libsm64 finds no floor there and won't create him
+	moveOrigin(g_w.lastSafe);
+	g_w.builder.begin(g_w.lastSafe);
+	while (!g_w.builder.step(probeWorld, 100000))
+	{
+	}
+	loadStaticSurfaces();
 	if (!spawnMario(g_w.lastSafe, heading))
 	{
 		N::Notify("Mario64GTA: couldn't respawn Mario here");
+		g_w.noFloorFor = 1; // so disable() puts the player back at lastSafe, not where Mario fell
 		disable();
 		return;
 	}

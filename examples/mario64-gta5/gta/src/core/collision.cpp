@@ -206,8 +206,8 @@ std::vector<Surface> vehicleBox(const V3 &mn, const V3 &mx, float scale)
 
 float smObjectYawFromGtaHeading(float headingDeg)
 {
-	// libsm64 negates the angle it's given (CONVERT_ANGLE) and SM64 rotates about +Y the right-handed way,
-	// which is GTA's rotation about +Z after the axis swap, so the two cancel out.
-	return headingDeg;
+	// A GTA heading turns counter-clockwise about +Z, which after the axis swap is a right-handed turn about SM64
+	// +Y, the way SM64's yaw turns. libsm64 negates the angle it's given (CONVERT_ANGLE), so hand it the negative.
+	return -headingDeg;
 }
 } // namespace m64

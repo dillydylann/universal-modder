@@ -418,6 +418,23 @@ static void testLibsm64()
 	CHECK(near(floorAt(-6, 6, 3), 1.5f, 0.05f));
 	CHECK(near(floorAt(-6, -6, 3), 0.0f, 0.05f));
 	sm64_surface_object_delete(id);
+	// a box that only reaches forward of its origin (local +y, the car's nose), at heading 45: GTA turns local +y
+	// counter-clockwise to (-sin 45, cos 45), north-west. A wrong sign would put it north-east instead.
+	const std::vector<Surface> nose = vehicleBox({-0.5f, 0, 0}, {0.5f, 4, 1.5f}, f.scale);
+	SM64SurfaceObject obj2{};
+	const V3 at3 = f.toSm({-6, -6, 0});
+	obj2.transform.position[0] = at3.x;
+	obj2.transform.position[1] = at3.y;
+	obj2.transform.position[2] = at3.z;
+	obj2.transform.eulerRotation[1] = smObjectYawFromGtaHeading(45.0f);
+	obj2.surfaceCount = static_cast<uint32_t>(nose.size());
+	std::vector<Surface> noseCopy = nose;
+	obj2.surfaces = reinterpret_cast<SM64Surface *>(noseCopy.data());
+	const uint32_t id2 = sm64_surface_object_create(&obj2);
+	const float d = 2.0f * 0.7071f;
+	CHECK(near(floorAt(-6 - d, -6 + d, 3), 1.5f, 0.05f)); // north-west: on it
+	CHECK(near(floorAt(-6 + d, -6 + d, 3), 0.0f, 0.05f)); // north-east: not
+	sm64_surface_object_delete(id2);
 	std::printf("libsm64: %zu static surfaces checked\n", s.size());
 }
 #endif

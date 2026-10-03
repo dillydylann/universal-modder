@@ -59,9 +59,10 @@ tags: [mashup, libsm64, decomp-as-library, scripthookv, collision-probing, camer
   of the solid side, or floors become ceilings.
 - **Swapping static collision:** `sm64_static_surfaces_load` frees the old list, so Mario's cached floor
   pointer dangles until the next tick. Swap surfaces right before a tick.
-- **Object yaw:** for `sm64_surface_object_*`, `eulerRotation[1]` in degrees equals the GTA heading in
-  degrees under the mapping below, because libsm64's `CONVERT_ANGLE` negates it. This was checked by moving a
-  rotated box and probing its floor.
+- **Object yaw:** for `sm64_surface_object_*`, `eulerRotation[1]` in degrees is **minus** the GTA heading
+  under the mapping below. A GTA heading is a right-handed turn about SM64 +Y, and libsm64's `CONVERT_ANGLE`
+  negates whatever it's given. This was checked with a box that only extends forward, at heading 45 (see
+  gotcha 5).
 - **Copying:** surface objects copy the surface array you pass in.
 - **`sm64_mario_attack(x, y, z, hitboxHeight)`:**
   - It only checks angles (punch/kick within ±60° of facing, ground pound while falling, and so on), never
@@ -115,6 +116,16 @@ story mode.
 4. **Mouse and stick look can't share one scale.** GTA's mouse look normal is a per-frame delta, but the stick
    is a rate. **Fix:** the camera takes radians per frame, and the script scales the mouse (a constant) and the
    stick (× frame time) separately, switching on `IS_USING_KEYBOARD_AND_MOUSE`.
+5. **The vehicle-box yaw test passed with the wrong sign.** **Cause:** it used a box centred on its origin at
+   heading 90, and +90° and −90° give the same footprint for that box. **Fix:** test a box that only extends
+   forward, at a heading that isn't a multiple of 90°. It showed that libsm64 needs −heading.
+6. **Moving the floating origin while Mario is in the air.** libsm64 keeps `peakHeight` for fall damage and has
+   no call to shift it, so moving Mario mid-fall loses or invents fall damage. **Fix:** only move the origin
+   while he's on the ground.
+7. **Respawning after a fall.** The collision window follows Mario down, so by respawn time his last safe spot
+   isn't in it, and `sm64_mario_create` returns −1 when there's no floor under it. **Fix:** rebuild the window at
+   the respawn point synchronously before creating him. "Fell out of the world" is detected as 2.5 s with no
+   floor under Mario, not as a height drop, so jumping off a tower stays a normal SM64 fall.
 
 ## Assets
 None made. Mario's model, textures and animations come from the user's ROM at run time, through libsm64.
