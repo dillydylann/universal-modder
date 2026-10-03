@@ -148,6 +148,12 @@ audio, both PowerShell with embedded C#.
   - Minecraft's colour + depth are depth-composited into GTA's frame.
   - Minecraft TNT, arrows and fireworks become GTA explosions and bullets, and Minecraft mobs fight the
     police.
+- **[examples/mario64-gta5](examples/mario64-gta5)**: Super Mario 64's Mario (libsm64, your own ROM) in GTA V
+  story mode. It hasn't been run in the game yet.
+  - Collision is probed from GTA's map, and cars are platforms.
+  - GTA's people shoot and punch him, and he punches, stomps and ground-pounds them, sometimes killing them
+    outright.
+  - The camera is SM64's Mario cam.
 
 Each has a field note with every non-obvious lesson: [knowledge/INDEX.md](knowledge/INDEX.md).
 

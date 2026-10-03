@@ -71,6 +71,19 @@ state and mesh. G64 embeds it in Garry's Mod; the host feeds its collision into 
 decomp/recomp (see `skills/mod-any-game/references/engines/retro-decomp.md`) can be wrapped this way. The
 user supplies their own ROM for assets.
 
+### Worked example: Mario 64 inside GTA V
+Code: `examples/mario64-gta5`. Field note: `knowledge/games/gta-v/mario64-libsm64.md`. It hasn't been run in
+the game yet; its README lists what still needs checking there.
+- **Host:** a ScriptHookV ASI that loads libsm64 as `sm64.dll` and reads the user's own ROM.
+- **Collision:** probed from GTA every few frames. Floors, overhangs, steps and walls come from line-of-sight
+  probes, and nearby cars become moving surface objects.
+- **Damage both ways:** the hidden player ped stands in for Mario, so GTA's AI shoots and punches it, and the
+  health it loses becomes wedges off Mario's power meter. Mario's attacks go through `sm64_mario_attack`,
+  then become GTA damage, ragdolls and kills. The ground pound has a shockwave.
+- **Camera:** a scripted GTA camera runs an SM64-style Mario cam.
+- **Testing without the game:** the portable core is unit-tested against a fake world, and inside the real
+  libsm64, with no ROM.
+
 ## Pattern 4: reimplement, then fuse (heaviest, most control)
 - **IW4L:** an LLM-written Rust MW2 runtime (Bevy + wgpu). It reads MW2's FastFiles from the user's install
   and translates the D3D9 shaders to WGSL.

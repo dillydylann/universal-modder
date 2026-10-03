@@ -43,6 +43,47 @@
   ]
  },
  {
+  "path": "games/gta-v/mario64-libsm64.md",
+  "kind": "game",
+  "title": "Super Mario 64's Mario inside GTA V (libsm64 in a ScriptHookV script)",
+  "game": "Grand Theft Auto V",
+  "games_also": [
+   "Super Mario 64"
+  ],
+  "game_version": "Targets GTA V Legacy (Steam, story mode) + ScriptHookV; libsm64 at commit fd11813; Super Mario 64 (USA) ROM supplied by the user. Not yet run in the game.",
+  "platform": "windows",
+  "engine": "rage",
+  "route": "decomp-recomp",
+  "tools": [
+   "libsm64 (CC0), cross-built with MinGW-w64",
+   "ScriptHookV + ASI loader",
+   "MSVC",
+   "g++ (offline tests)"
+  ],
+  "anti_cheat": "BattlEye guards GTA Online only: story mode, launched with BattlEye off (-nobattleye), never online",
+  "status": "in-progress",
+  "agents": [
+   "GitHub Copilot"
+  ],
+  "humans": [
+   "@dillydylann"
+  ],
+  "date": "2026-10-03",
+  "links": [
+   "https://github.com/libsm64/libsm64"
+  ],
+  "tags": [
+   "mashup",
+   "libsm64",
+   "decomp-as-library",
+   "scripthookv",
+   "collision-probing",
+   "camera",
+   "combat",
+   "untested-in-game"
+  ]
+ },
+ {
   "path": "games/gta-v/minecraft-passthrough.md",
   "kind": "game",
   "title": "Minecraft inside GTA V (passthrough mod)",
