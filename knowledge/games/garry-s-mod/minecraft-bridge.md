@@ -93,6 +93,10 @@ See `examples/minecraft-gmod-bridge/README.md`:
    reported.
 5. **Web pages could drive a localhost server.** **Cause:** any page can POST to 127.0.0.1. **Fix:** a required
    custom header, which forces a CORS preflight that's never answered, plus a refusal of any `Origin`.
+6. **The GMod world never reached Minecraft when GMod was up first** (found in review, before running). **Cause:**
+   the mod's HTTP server starts before its world loads, and messages are dropped until then. The addon counted
+   any reply as "connected" and never re-sent the cells it had scanned. **Fix:** only `ready: true` counts as
+   connected, and going not-ready (a world closing) resets the scan.
 
 ## Assets
 None committed. Block and mob textures come from the user's own Minecraft jar, via `tools/extract_textures.py`.

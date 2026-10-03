@@ -56,14 +56,24 @@ end
 local function handle(reply)
 	if not istable(reply) then return end
 
+	-- Minecraft's server is up before its world is (and between worlds): everything sent meanwhile is dropped, so
+	-- only count as connected once the world is ready, and start over (rescan, resync) each time it becomes ready
+	if not reply.ready then
+		if MCB.Connected then
+			print("[mcbridge] Minecraft's world closed; waiting for it")
+			MCB.Connected = false
+			hook.Run("MCBridgeDisconnected")
+		end
+
+		return
+	end
+
 	if not MCB.Connected then
 		MCB.Connected = true
 		warned = false
 		print("[mcbridge] connected to Minecraft")
 		hook.Run("MCBridgeConnected")
 	end
-
-	if not reply.ready then return end
 
 	for _, e in ipairs(reply.events or {}) do
 		local f = istable(e) and MCB.Handlers[e.t]
