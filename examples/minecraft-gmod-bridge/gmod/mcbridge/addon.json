@@ -1,0 +1,6 @@
+{
+	"title": "Minecraft Bridge",
+	"type": "entity",
+	"tags": ["fun", "build"],
+	"ignore": ["*.md", "*.py"]
+}

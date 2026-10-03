@@ -1,0 +1,3 @@
+# textures extracted from your own Minecraft jar by tools/extract_textures.py: never commit them
+gmod/mcbridge/materials/
+__pycache__/

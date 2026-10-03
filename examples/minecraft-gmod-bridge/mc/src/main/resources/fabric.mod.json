@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"id": "gmodbridge",
+	"version": "${version}",
+	"name": "GMod Bridge",
+	"description": "Runs next to Garry's Mod: the GMod map becomes invisible blocks and water here, GMod's player and NPCs become targets for Minecraft's mobs, and damage, explosions, physgun grabs and block changes go both ways over HTTP on 127.0.0.1.",
+	"authors": [
+		"universal-modder"
+	],
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"dev.universalmodder.gmodbridge.GmodBridge"
+		],
+		"client": [
+			"dev.universalmodder.gmodbridge.client.GmodBridgeClient"
+		]
+	},
+	"mixins": [
+		"gmodbridge.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
