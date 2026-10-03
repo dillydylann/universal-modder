@@ -148,6 +148,11 @@ audio, both PowerShell with embedded C#.
   - Minecraft's colour + depth are depth-composited into GTA's frame.
   - Minecraft TNT, arrows and fireworks become GTA explosions and bullets, and Minecraft mobs fight the
     police.
+- **[examples/minecraft-gmod-bridge](examples/minecraft-gmod-bridge)**: real Minecraft joined to Garry's Mod
+  (built, not yet run in the games).
+  - A Fabric mod and a GMod Lua addon exchange mobs, blocks, water, damage and explosions over local HTTP.
+  - GMod guns hurt Minecraft mobs, RPGs blow craters in Minecraft, and Minecraft TNT explodes in GMod.
+  - Mobs attack the player and NPCs, and the physgun picks up blocks and mobs.
 
 Each has a field note with every non-obvious lesson: [knowledge/INDEX.md](knowledge/INDEX.md).
 

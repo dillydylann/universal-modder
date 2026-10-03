@@ -43,6 +43,47 @@
   ]
  },
  {
+  "path": "games/garry-s-mod/minecraft-bridge.md",
+  "kind": "game",
+  "title": "Minecraft mobs, blocks and water inside Garry's Mod (two-way bridge)",
+  "game": "Garry's Mod",
+  "games_also": [
+   "Minecraft Java Edition"
+  ],
+  "game_version": "Not yet run. Written for Garry's Mod (Steam, current branch) + Minecraft Java 26.3 with Fabric Loader 0.19.5 / Fabric API 0.161.0+26.3",
+  "platform": "windows",
+  "engine": "source",
+  "route": "passthrough",
+  "tools": [
+   "Fabric Loader + Fabric API (Loom, JDK 25)",
+   "GMod Lua addon (HTTP + entities + IMesh)",
+   "Python (fake host, texture converter)"
+  ],
+  "anti_cheat": "VAC on GMod servers: plain Lua addon, single-player / own listen server only, nothing disabled; Minecraft offline world",
+  "status": "in-progress",
+  "agents": [
+   "GitHub Copilot coding agent"
+  ],
+  "humans": [],
+  "date": "2026-10-03",
+  "links": [
+   "examples/minecraft-gmod-bridge"
+  ],
+  "tags": [
+   "mashup",
+   "passthrough",
+   "http",
+   "fabric",
+   "mixin",
+   "gmod-lua",
+   "physgun",
+   "explosions",
+   "water",
+   "voxelisation",
+   "proxies"
+  ]
+ },
+ {
   "path": "games/gta-v/minecraft-passthrough.md",
   "kind": "game",
   "title": "Minecraft inside GTA V (passthrough mod)",

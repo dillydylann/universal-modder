@@ -65,7 +65,7 @@ def main():
 
         if target is not None:
             if tick % 20 == 0 and not held:
-                # one SMG bullet: 12 GMod damage / mcbridge_hp_scale 5 = 2.4 Minecraft health
+                # a burst of SMG fire: 12 GMod damage / mcbridge_hp_scale 5 = 2.4 Minecraft health
                 body["dmg"] = [[target, 2.4, PLAYER_PED, "bullet"]]
             if 8 < t < 10:
                 body["hold"] = [[target, 0.5, 66.0 + (t - 8), 3.5]]
